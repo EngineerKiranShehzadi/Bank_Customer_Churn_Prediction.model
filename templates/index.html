@@ -8,71 +8,75 @@
 </head>
 <body>
     <div class="container">
-        <h2>Customer Churn Prediction</h2>
-        <form action="/predict" method="POST">
+        <header>
+            <h1>Customer Churn Prediction</h1>
+            <p>Predict the likelihood of a customer churning based on their profile.</p>
+        </header>
+
+        <form action="/predict" method="POST" class="prediction-form">
             <div class="form-row">
-                <div class="form-group left">
+                <div class="form-group">
                     <label for="age">Age:</label>
-                    <input type="number" id="age" name="age" required><br><br>
+                    <input type="number" id="age" name="age" required>
                 </div>
                 
-                <div class="form-group right">
+                <div class="form-group">
                     <label for="credit_score">Credit Score:</label>
-                    <input type="number" id="credit_score" name="credit_score" required><br><br>
+                    <input type="number" id="credit_score" name="credit_score" required>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group left">
+                <div class="form-group">
                     <label for="balance">Balance:</label>
-                    <input type="number" step="0.01" id="balance" name="balance" required><br><br>
+                    <input type="number" step="0.01" id="balance" name="balance" required>
                 </div>
                 
-                <div class="form-group right">
+                <div class="form-group">
                     <label for="products_number">Number of Products:</label>
-                    <input type="number" id="products_number" name="products_number" required><br><br>
+                    <input type="number" id="products_number" name="products_number" required>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group left">
+                <div class="form-group">
                     <label for="active_member">Active Member (0 or 1):</label>
-                    <input type="number" id="active_member" name="active_member" required><br><br>
+                    <input type="number" id="active_member" name="active_member" required>
                 </div>
                 
-                <div class="form-group right">
+                <div class="form-group">
                     <label for="estimated_salary">Estimated Salary:</label>
-                    <input type="number" step="0.01" id="estimated_salary" name="estimated_salary" required><br><br>
+                    <input type="number" step="0.01" id="estimated_salary" name="estimated_salary" required>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group left">
+                <div class="form-group">
                     <label for="country">Country:</label>
                     <select id="country" name="country" required>
                         <option value="France">France</option>
                         <option value="Spain">Spain</option>
-                    </select><br><br>
+                    </select>
                 </div>
                 
-                <div class="form-group right">
+                <div class="form-group">
                     <label for="gender">Gender:</label>
                     <select id="gender" name="gender" required>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
-                    </select><br><br>
+                    </select>
                 </div>
             </div>
 
             <div class="form-row">
-                <div class="form-group left">
+                <div class="form-group">
                     <label for="tenure">Tenure (in years):</label>
-                    <input type="number" id="tenure" name="tenure" required><br><br>
+                    <input type="number" id="tenure" name="tenure" required>
                 </div>
                 
-                <div class="form-group right">
+                <div class="form-group">
                     <label for="credit_card">Has Credit Card (0 or 1):</label>
-                    <input type="number" id="credit_card" name="credit_card" required><br><br>
+                    <input type="number" id="credit_card" name="credit_card" required>
                 </div>
             </div>
 
@@ -82,10 +86,28 @@
         </form>
 
         {% if prediction_text %}
-        <div class="result">
+        <div id="result-section" class="result">
             <h3>{{ prediction_text }}</h3>
         </div>
         {% endif %}
     </div>
+
+    <footer>
+        <p>Developed by <strong>Kiran Shehzadi</strong>, Data Scientist</p>
+    </footer>
+
+    <script>
+        // Scroll to the result section when the form is submitted
+        function scrollToResult() {
+            var resultSection = document.getElementById('result-section');
+            if (resultSection) {
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        document.querySelector('form').addEventListener('submit', function(event) {
+            setTimeout(scrollToResult, 100); // Small delay to ensure result is visible
+        });
+    </script>
 </body>
 </html>
