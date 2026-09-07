@@ -72,10 +72,15 @@ import pandas as pd
 
 app = Flask(__name__)
 
-# ✅ Load the correct trained model + scaler + column list
+# Load the trained model + scaler + column list + evaluation metadata.
+# The decision threshold is tuned on out-of-fold predictions during
+# training (see bank_customer_churn_model.py) and persisted here so
+# serving matches evaluation instead of silently using 0.5.
 model = joblib.load("gradient_boosting_model.pkl")
 scaler = joblib.load("scaler.pkl")
 train_columns = joblib.load("train_columns.pkl")
+churn_metadata = joblib.load("churn_metadata.pkl")
+DECISION_THRESHOLD = churn_metadata["threshold"]
 
 @app.route("/")
 def index():
@@ -118,11 +123,16 @@ def predict():
     # 5) Scale using training scaler (transform only!)
     input_scaled = scaler.transform(input_df)
 
-    # 6) Predict
-    prediction = model.predict(input_scaled)[0]
+    # 6) Predict using the tuned decision threshold, not the model's
+    #    default 0.5 cutoff
+    churn_probability = model.predict_proba(input_scaled)[0][1]
+    prediction = int(churn_probability >= DECISION_THRESHOLD)
 
     result = "Churn" if prediction == 1 else "No Churn"
-    return render_template("index.html", prediction_text=f"Prediction: {result}")
+    return render_template(
+        "index.html",
+        prediction_text=f"Prediction: {result} (probability: {churn_probability:.2%})",
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
